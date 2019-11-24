@@ -1,6 +1,7 @@
 package com.achaves.pontointeligente.documents
 
 import com.achaves.pontointeligente.enums.PerfilEnum
+import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
@@ -15,5 +16,5 @@ data class Funcionario (
     val valorHora: Double? = 0.0,
     val qtdHorasTrabalhoDia: Float? = 0.0f,
     val qtdHorasAlmoco: Float? = 0.0f,
-    @Id val id: String? = null
+    @Id val id: String? = ObjectId().toHexString()
 )
