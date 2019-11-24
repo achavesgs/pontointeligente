@@ -27,7 +27,7 @@ class LancamentoController (
 ) {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    @Value("\${paginacao.qtd_por_pagina}    ")
+    @Value("\${paginacao.qtd_por_pagina}")
     val qtdPorPagina: Int = 15
 
     @PostMapping

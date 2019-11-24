@@ -6,7 +6,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 class FuncionarioPrincipal(val funcionario: Funcionario): UserDetails {
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> { //perfil de acesso do usuário
         val authorities: MutableCollection<GrantedAuthority> = mutableListOf<GrantedAuthority>()
         authorities.add(SimpleGrantedAuthority(funcionario.perfil.toString()))
         return authorities
