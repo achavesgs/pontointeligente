@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit4.SpringRunner
 import java.lang.Exception
-import java.util.*
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -48,7 +47,7 @@ class FuncionarioServiceTest {
 
     @Test
     fun testBuscarFuncionarioPorId() {
-        val funcionario: Optional<Funcionario>? = this.funcionarioService?.buscarPorId(id)
+        val funcionario: Funcionario? = this.funcionarioService?.buscarPorId(id)
         Assert.assertNotNull(funcionario)
     }
 
