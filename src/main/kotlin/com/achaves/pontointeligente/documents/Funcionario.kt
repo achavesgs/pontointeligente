@@ -1,5 +1,6 @@
 package com.achaves.pontointeligente.documents
 
+import com.achaves.pontointeligente.dto.CadastroPFDTO
 import com.achaves.pontointeligente.dto.CadastroPJDTO
 import com.achaves.pontointeligente.enums.PerfilEnum
 import org.bson.types.ObjectId
@@ -22,3 +23,10 @@ data class Funcionario (
 
 fun Funcionario.converterCadastroPJDto(empresa: Empresa): CadastroPJDTO =
         CadastroPJDTO(nome, email, "", cpf, empresa.cnpj, empresa.razaoSocial, id)
+
+fun Funcionario.converterCadastroPFDto(empresa: Empresa): CadastroPFDTO =
+        CadastroPFDTO(nome, email, "", cpf,
+                empresa.cnpj, id.toString(), valorHora.toString(),
+                qtdHorasTrabalhoDia.toString(),
+                qtdHorasTrabalhoDia.toString(),
+                id)

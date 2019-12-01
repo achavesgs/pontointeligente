@@ -2,7 +2,9 @@ package com.achaves.pontointeligente.controllers
 
 import com.achaves.pontointeligente.documents.Empresa
 import com.achaves.pontointeligente.documents.Funcionario
+import com.achaves.pontointeligente.documents.converterCadastroPFDto
 import com.achaves.pontointeligente.documents.converterCadastroPJDto
+import com.achaves.pontointeligente.dto.CadastroPFDTO
 import com.achaves.pontointeligente.dto.CadastroPJDTO
 import com.achaves.pontointeligente.dto.converterDtoParaEmpresa
 import com.achaves.pontointeligente.dto.converterDtoParaFuncionario
@@ -19,43 +21,41 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/cadastrar-pj")
-class CadastroPJController(val empresaService: EmpresaService,
+@RequestMapping("/api/cadastrar-pf")
+class CadastroPFController(val empresaService: EmpresaService,
                            val funcionarioService: FuncionarioService) {
 
     @PostMapping
-    fun cadastrar(@Valid @RequestBody cadastroPJDTO: CadastroPJDTO,
-                  result: BindingResult): ResponseEntity<Response<CadastroPJDTO>> {
-        val response: Response<CadastroPJDTO> = Response<CadastroPJDTO>()
+    fun cadastrar(@Valid @RequestBody cadastroPFDTO: CadastroPFDTO,
+                  result: BindingResult): ResponseEntity<Response<CadastroPFDTO>> {
+        val response: Response<CadastroPFDTO> = Response<CadastroPFDTO>()
 
-        validarDadosExistentes(cadastroPJDTO, result)
+        val empresa: Empresa? = empresaService.buscarPorCnpj(cadastroPFDTO.cnpj)
+        validarDadosExistentes(cadastroPFDTO, empresa, result)
+
         if (result.hasErrors()) {
             for (erro in result.allErrors) response.erros.add(erro.defaultMessage ?: "")
             return ResponseEntity.badRequest().body(response)
         }
 
-        val empresa: Empresa = cadastroPJDTO.converterDtoParaEmpresa()
-        empresaService.persistir(empresa)
-
-        val funcionario: Funcionario = funcionarioService.persistir(cadastroPJDTO.converterDtoParaFuncionario(empresa))
-        response.data = funcionario.converterCadastroPJDto(empresa)
+        val funcionario: Funcionario = funcionarioService.persistir(cadastroPFDTO.converterDtoParaFuncionario(empresa!!))
+        response.data = funcionario.converterCadastroPFDto(empresa)
 
         return ResponseEntity.ok(response)
     }
 
 
-    private fun validarDadosExistentes(cadastroPJDTO: CadastroPJDTO, result: BindingResult) {
-        val empresa: Empresa? = empresaService.buscarPorCnpj(cadastroPJDTO.cnpj)
-        if (empresa != null) {
-            result.addError(ObjectError("empresa", "Empresa já existente."))
+    private fun validarDadosExistentes(cadastroPFDTO: CadastroPFDTO, empresa: Empresa?, result: BindingResult) {
+        if (empresa == null) {
+            result.addError(ObjectError("empresa", "Empresa não cadastrada."))
         }
 
-        val funcionarioCpf: Funcionario? = funcionarioService.buscarPorCpf(cadastroPJDTO.cpf)
+        val funcionarioCpf: Funcionario? = funcionarioService.buscarPorCpf(cadastroPFDTO.cpf)
         if (funcionarioCpf != null) {
             result.addError(ObjectError("funcionario", "CPF já existente."))
         }
 
-        val funcionarioEmail: Funcionario? = funcionarioService.buscarPorEmail(cadastroPJDTO.email)
+        val funcionarioEmail: Funcionario? = funcionarioService.buscarPorEmail(cadastroPFDTO.email)
         if (funcionarioEmail != null) {
             result.addError(ObjectError("funcionario", "Email já existente."))
         }
