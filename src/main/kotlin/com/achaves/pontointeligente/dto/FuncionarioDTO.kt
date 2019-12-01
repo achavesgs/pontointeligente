@@ -1,5 +1,6 @@
 package com.achaves.pontointeligente.dto
 
+import com.achaves.pontointeligente.documents.Funcionario
 import org.hibernate.validator.constraints.Length
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
@@ -21,3 +22,7 @@ data class FuncionarioDTO (
         val qtdHorasAlmoco: String? = null,
         val id: String? = null
 )
+
+fun Funcionario.toFuncionarioDto(): FuncionarioDTO =
+        FuncionarioDTO(nome, email, "", valorHora.toString(), qtdHorasTrabalhoDia.toString(),
+                qtdHorasAlmoco.toString(), id)

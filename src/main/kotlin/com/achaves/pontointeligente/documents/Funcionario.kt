@@ -2,7 +2,9 @@ package com.achaves.pontointeligente.documents
 
 import com.achaves.pontointeligente.dto.CadastroPFDTO
 import com.achaves.pontointeligente.dto.CadastroPJDTO
+import com.achaves.pontointeligente.dto.FuncionarioDTO
 import com.achaves.pontointeligente.enums.PerfilEnum
+import com.achaves.pontointeligente.utils.SenhaUtils
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
@@ -30,3 +32,19 @@ fun Funcionario.converterCadastroPFDto(empresa: Empresa): CadastroPFDTO =
                 qtdHorasTrabalhoDia.toString(),
                 qtdHorasTrabalhoDia.toString(),
                 id)
+
+fun Funcionario.atualizarDadosFuncionario(funcionarioDTO: FuncionarioDTO): Funcionario {
+    var senha: String
+    if (funcionarioDTO.senha == null){
+        senha = this.senha
+    } else {
+        senha = SenhaUtils().gerarBcrypt(funcionarioDTO.senha)
+    }
+
+    return Funcionario(funcionarioDTO.nome, email, senha,
+            cpf, perfil, empresaId,
+            funcionarioDTO.valHora?.toDouble(),
+            funcionarioDTO.qtdHorasTrabalhoDia?.toFloat(),
+            funcionarioDTO.qtdHorasAlmoco?.toFloat(),
+            id)
+}
