@@ -1,7 +1,6 @@
 package com.achaves.pontointeligente.services
 
 import com.achaves.pontointeligente.documents.Funcionario
-import java.util.*
 
 interface FuncionarioService {
 
@@ -11,5 +10,5 @@ interface FuncionarioService {
 
     fun buscarPorEmail(email: String): Funcionario?
 
-    fun buscarPorId(id: String): Optional<Funcionario>
+    fun buscarPorId(id: String): Funcionario?
 }
