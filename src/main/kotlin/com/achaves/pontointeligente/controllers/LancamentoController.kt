@@ -96,6 +96,30 @@ class LancamentoController (
         return ResponseEntity.ok(response)
     }
 
+    @PutMapping(value = "/{id}")
+    fun atualizar(
+            @Valid //realiza as validações do DTO
+            @RequestBody //converte de json para classe java
+            lancamentoDTO: LancamentoDTO,
+            @PathVariable("id") id: String,
+            result: BindingResult): ResponseEntity<Response<LancamentoDTO>> {
+
+        val response: Response<LancamentoDTO> = Response<LancamentoDTO>()
+        validarFuncionario(lancamentoDTO, result)
+
+        val lancamento: Lancamento = converterDtoPraLancamento(lancamentoDTO.copy(id = id), result)
+
+        if (result.hasErrors()) {
+            for (erro in result.allErrors) response.erros.add(erro.defaultMessage!!)
+            return ResponseEntity.badRequest().body(response)
+        }
+
+        lancamentoService.persistir(lancamento)
+        response.data = lancamento.toLancamentoDto()
+        return ResponseEntity.ok(response)
+    }
+
+
     private fun validarFuncionario(lancamentoDTO: LancamentoDTO, result: BindingResult) {
         if(lancamentoDTO.funcionarioId == null) {
             result.addError(ObjectError("funcionario", "Funcionario não informado"))
