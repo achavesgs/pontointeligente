@@ -75,6 +75,22 @@ class LancamentoControllerTest {
 
     @Test
     @Throws(Exception::class)
+    @WithMockUser
+    fun testCadastrarLancamentoFuncionarioIdInvalido() {
+        BDDMockito.given<Funcionario>(funcionarioService?.buscarPorId(idFuncionario)).willReturn(null)
+
+        mvc!!.perform(MockMvcRequestBuilders.post(urlBase)
+                .content(obterJsonRequisicaoPost())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.erros")
+                        .value("Funcionario não encontrado. ID inexistente."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty)
+    }
+
+    @Test
+    @Throws(Exception::class)
     @WithMockUser(username = "admin@admin.com", roles = arrayOf("ADMIN"))//spring cria um usuario falso com o perfil admin
 //    @WithMockUser
     fun testRemoverLancamento(){
