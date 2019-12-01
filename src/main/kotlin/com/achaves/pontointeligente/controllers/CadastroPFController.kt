@@ -3,10 +3,7 @@ package com.achaves.pontointeligente.controllers
 import com.achaves.pontointeligente.documents.Empresa
 import com.achaves.pontointeligente.documents.Funcionario
 import com.achaves.pontointeligente.documents.converterCadastroPFDto
-import com.achaves.pontointeligente.documents.converterCadastroPJDto
 import com.achaves.pontointeligente.dto.CadastroPFDTO
-import com.achaves.pontointeligente.dto.CadastroPJDTO
-import com.achaves.pontointeligente.dto.converterDtoParaEmpresa
 import com.achaves.pontointeligente.dto.converterDtoParaFuncionario
 import com.achaves.pontointeligente.response.Response
 import com.achaves.pontointeligente.services.EmpresaService
