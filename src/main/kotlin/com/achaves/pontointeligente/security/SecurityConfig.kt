@@ -35,8 +35,9 @@ class SecurityConfig(
     @Bean //torna a funcao inicializavel, como se fosse um servico do spring
     fun authenticationProvider(): DaoAuthenticationProvider {
         val authProvider = DaoAuthenticationProvider()
-        authProvider.setUserDetailsService(funcionarioDetailsService)
-        authProvider.setPasswordEncoder(encoder())
+        authProvider.setUserDetailsService(funcionarioDetailsService)//com esta configuração o springsecurity saberá que que deve usar o funcionarioDetailService para chamar o
+        //loadFuncionario com o serviço customizado
+        authProvider.setPasswordEncoder(encoder()) //quando receber a senha em string, irá gerar um hash para verificarção
         return authProvider
     }
 

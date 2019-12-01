@@ -10,12 +10,10 @@ import com.achaves.pontointeligente.services.FuncionarioService
 import com.achaves.pontointeligente.services.LancamentoService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.BindingResult
 import org.springframework.validation.ObjectError
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.text.SimpleDateFormat
 import javax.validation.Valid
 
@@ -29,6 +27,22 @@ class LancamentoController (
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     @Value("\${paginacao.qtd_por_pagina}")
     val qtdPorPagina: Int = 15
+
+    @DeleteMapping(value = "/id")
+    @PreAuthorize("hasAnyRole('ADMIN')") //anotação que é validada pelo método "EnableGlobalMethodSecurity",
+    // para remover é necessário possuir um usuário com o perfil admin, definido no authorities
+    fun remover(@PathVariable("id") id: String): ResponseEntity<Response<String>> {
+        val response: Response<String> = Response<String>()
+        val lancamento: Lancamento? = lancamentoService.buscarPorId(id).let { null }
+
+        if (lancamento == null) {
+            response.erros.add("Erro ao remover lancamento. Registro não encontrado para o id $id")
+            return ResponseEntity.badRequest().body(response)
+        }
+
+        lancamentoService.remover(id)
+        return ResponseEntity.ok(Response<String>())
+    }
 
     @PostMapping
     fun adicionar(
