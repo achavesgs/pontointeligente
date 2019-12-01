@@ -1,5 +1,6 @@
 package com.achaves.pontointeligente.documents
 
+import com.achaves.pontointeligente.dto.CadastroPJDTO
 import com.achaves.pontointeligente.enums.PerfilEnum
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
@@ -18,3 +19,6 @@ data class Funcionario (
     val qtdHorasAlmoco: Float? = 0.0f,
     @Id val id: String? = ObjectId().toHexString()
 )
+
+fun Funcionario.converterCadastroPJDto(empresa: Empresa): CadastroPJDTO =
+        CadastroPJDTO(nome, email, "", cpf, empresa.cnpj, empresa.razaoSocial, id)

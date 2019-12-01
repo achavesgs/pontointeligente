@@ -1,5 +1,9 @@
 package com.achaves.pontointeligente.dto
 
+import com.achaves.pontointeligente.documents.Empresa
+import com.achaves.pontointeligente.documents.Funcionario
+import com.achaves.pontointeligente.enums.PerfilEnum
+import com.achaves.pontointeligente.utils.SenhaUtils
 import org.hibernate.validator.constraints.Length
 import org.hibernate.validator.constraints.br.CNPJ
 import org.hibernate.validator.constraints.br.CPF
@@ -17,19 +21,26 @@ data class CadastroPJDTO (
         val email: String = "",
 
         @get:NotEmpty(message = "Senha não pode ser vazia.")
-        val senha: String? = null,
+        val senha: String = "",
 
         @get:NotEmpty(message = "CPF não pode ser vazia.")
         @get:CPF(message = "CPF inválido.")
-        val cpf: String? = null,
+        val cpf: String = "",
 
         @get:NotEmpty(message = "CNPJ não pode ser vazia.")
         @get:CNPJ(message = "CNPJ inválido.")
-        val cnpj: String? = null,
+        val cnpj: String = "",
 
         @get:NotEmpty(message = "Razao Social não pode ser vazia.")
         @get:Length(min = 5, max = 200, message = "Razão Social deve conter entre 5 e 200 caracteres.")
-        val razaoSocial: String? = null,
+        val razaoSocial: String = "",
 
         val id: String? = null
 )
+
+fun CadastroPJDTO.converterDtoParaEmpresa(): Empresa =
+        Empresa(razaoSocial, cnpj)
+
+fun CadastroPJDTO.converterDtoParaFuncionario(empresa: Empresa): Funcionario =
+        Funcionario(nome, email, SenhaUtils().gerarBcrypt(senha), cpf, PerfilEnum.ROLE_ADMIN,
+                empresa.id.toString())
